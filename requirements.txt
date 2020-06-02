@@ -2,3 +2,5 @@ pandas
 numpy
 numexpr
 python-dotenv
+SQLAlchemy
+psycopg2

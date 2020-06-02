@@ -188,6 +188,10 @@ def cnpj_full(input_list, tipo_output, output_path):
         import sqlite3
         conBD = sqlite3.connect(os.path.join(output_path,NOME_ARQUIVO_SQLITE))
 
+    if tipo_output == 'postgresql':
+        from sqlalchemy import create_engine
+        conBD = create_engine('postgresql://postgres:blood2002@localhost:5432/cnpj_full_pg')
+
     header_colnomes = list(list(zip(*HEADER_COLUNAS))[0])
     empresas_colnomes = list(list(zip(*EMPRESAS_COLUNAS))[0])
     socios_colnomes = list(list(zip(*SOCIOS_COLUNAS))[0])
@@ -313,7 +317,7 @@ def cnpj_full(input_list, tipo_output, output_path):
                               index=False,
                               quoting=csv.QUOTE_NONNUMERIC)
 
-                elif tipo_output == 'sqlite':
+                elif tipo_output == 'sqlite' or tipo_output == 'postgresql' :
                     replace_append = 'append' if (i_arq + i_bloco) > 0 else 'replace' 
                         
                     df.to_sql(REGISTROS_TIPOS[tipo_registro], 
@@ -322,7 +326,7 @@ def cnpj_full(input_list, tipo_output, output_path):
                               index=False)
 
 
-    if tipo_output == 'sqlite':
+    if tipo_output == 'sqlite' or tipo_output == 'postgresql' :
         conBD.close()
 
     # Imprime totais
@@ -442,7 +446,7 @@ def main():
                     help()
                     sys.exit(-1)
 
-        if tipo_output not in ['csv','sqlite']:
+        if tipo_output not in ['csv','sqlite','postgresql']:
             print('''
 ERRO: tipo de output inválido. 
 Escolha um dos seguintes tipos de output: csv ou sqlite.
