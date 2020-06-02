@@ -190,7 +190,14 @@ def cnpj_full(input_list, tipo_output, output_path):
 
     if tipo_output == 'postgresql':
         from sqlalchemy import create_engine
-        conBD = create_engine('postgresql://postgres:blood2002@localhost:5432/cnpj_full_pg')
+        import settings
+        dbhost = os.getenv('DB_HOST')
+        dbengine = os.getenv('DB_ENGINE')
+        dbport = os.getenv('DB_PORT')
+        dbuser = os.getenv('DB_USER')
+        dbpass = os.getenv('DB_PASS')
+        dbname = os.getenv('DB_NAME')
+        conBD = create_engine(f'{dbengine}://{dbuser}:{dbpass}@{dbhost}:{dbport}/{dbname}')
 
     header_colnomes = list(list(zip(*HEADER_COLUNAS))[0])
     empresas_colnomes = list(list(zip(*EMPRESAS_COLUNAS))[0])
